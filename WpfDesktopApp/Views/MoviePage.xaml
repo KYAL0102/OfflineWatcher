@@ -15,7 +15,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" PanningMode="Both">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" CanContentScroll="True">
         <Grid Background="{StaticResource DarkBackgroundBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -51,7 +51,8 @@
             </Grid>
             
             <Label Grid.Row="3" Content="Extras" Style="{StaticResource DarkTextHeaderLabelStyle}" Margin="10 0"/>
-            <ListView Grid.Row="4" ItemsSource="{Binding Extras}" Style="{StaticResource DarkListViewStyle2}">
+            <ListView Grid.Row="4" ItemsSource="{Binding Extras}" Style="{StaticResource DarkListViewStyle2}"
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
