@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Core.Entities.Doctor">
+    <Position X="5.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Doctor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Entities.DataStream">
+    <Position X="8.75" Y="6.5" Width="1.5" />
+    <Members>
+      <Property Name="MyValues" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAACAAAAAAAAAAAAAAIAAwAAAAAAA=</HashCode>
+      <FileName>Entities\DataStream.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Examination" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Core.Entities.Examination">
+    <Position X="5.5" Y="6.5" Width="1.75" />
+    <Members>
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAQAAAEAAACAAAAAAACAAQAEAAgAAAACAA=</HashCode>
+      <FileName>Entities\Examination.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Patient" />
+      <Property Name="Doctor" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="DataStreams" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Core.Entities.Patient">
+    <Position X="2.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAEAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Entities\Patient.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Examinations" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

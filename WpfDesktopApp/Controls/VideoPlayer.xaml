@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="WpfDesktopApp.Controls.VideoPlayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+             xmlns:converter="clr-namespace:WpfDesktopApp.Converter"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             Name="VideoPlayerControl"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/DarkModeDictionary.xaml"/>
+                <ResourceDictionary Source="../Resources/General.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <converter:AspectRatioConverter x:Key="AspectRatioConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel>
+        <vlc:VideoView
+            x:Name="VideoView"
+            Width="{Binding RelativeSource={RelativeSource AncestorType=StackPanel}, Path=ActualWidth}" Background="Black"
+            SnapsToDevicePixels="True"
+            UseLayoutRounding="True"
+            AllowDrop="False">
+            <vlc:VideoView.Height>
+                <MultiBinding Converter="{StaticResource AspectRatioConverter}">
+                    <Binding RelativeSource="{RelativeSource AncestorType=StackPanel}" Path="ActualWidth"/>
+                    <Binding>
+                        <Binding.Source>
+                            <sys:Double>1.78</sys:Double>
+                        </Binding.Source>
+                    </Binding>
+                </MultiBinding>
+            </vlc:VideoView.Height>
+            <Grid Background="#02000000" 
+                  MouseLeave="OnMouseLeave" MouseMove="OnMouseMove" PreviewMouseWheel="VideoView_PreviewMouseWheel" MouseDown="UIElement_OnMouseDown">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Opacity="0" Grid.Row="0" x:Name="InnerUpperGrid" VerticalAlignment="Top" Margin="20 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Style="{StaticResource VideoButton}" Click="CancelPlay">
+                        <Image Grid.Row="3" Source="../Resources/Images/close.png"/>
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="1" Opacity="0" x:Name="InnerGrid" VerticalAlignment="Bottom">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Slider x:Name="VideoSlider" 
+                            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="20 0"
+                            Minimum="0" Maximum="1000"
+                            ValueChanged="VideoSlider_OnValueChanged"/>
+                    
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20 10">
+                        <!-- Play/Pause button. -->
+                        <Button Style="{StaticResource VideoButton}" Click="ChangeVideoState">
+                            <Image Grid.Row="3" x:Name="VideoStateButtonImage"/>
+                        </Button>
+
+                        <!-- Volume slider. This slider allows a Volume range between 0 and 1. -->
+                        <TextBlock Foreground="White" VerticalAlignment="Center" Margin="5">Volume</TextBlock>
+                        <Slider VerticalAlignment="Center" Width="100"
+                                Minimum="0" Maximum="100" Value="100" ValueChanged="SoundSlider_OnValueChanged"/>
+                    </StackPanel>
+                    
+                    <Label x:Name="TimeLabel" Grid.Row="1" Grid.Column="1" Style="{StaticResource DarkTextLabelStyle}"
+                           HorizontalAlignment="Center"/>
+                </Grid>
+            </Grid>
+        </vlc:VideoView>
+    </StackPanel>
+</UserControl>

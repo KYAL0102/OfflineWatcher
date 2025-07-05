@@ -1,0 +1,23 @@
+@baseUrl = http://localhost:5000/api
+
+GET {{baseUrl}}/examinations
+
+
+###
+GET {{baseUrl}}/examinations?
+
+GET {{baseUrl}}/examinations
+
+###
+GET {{baseUrl}}/examinations/1
+
+
+###
+PATCH {{baseUrl}}/examinations/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "findings": "Dieser Patient zeigt eine deutliche Auffälligkeit im ",
+  "doctorId": 5
+}

@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="WpfDesktopApp.Views.MediaMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:WpfDesktopApp.Views"
+             xmlns:viewModels="clr-namespace:WpfDesktopApp.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewModels:MenuViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/DarkModeDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource DarkBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <TextBox Grid.Row="0" 
+                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                 Width="300px" Margin="0,10" FontSize="14"
+                 Style="{StaticResource DarkTextBoxStyle}"/>
+        
+        <ProgressBar Grid.Row="1" 
+                     Foreground="{StaticResource DarkAccentBrush}"
+                     IsIndeterminate="True" Minimum="0" Maximum="100" 
+                     Visibility="{Binding ProgressBarVisibility}"/>
+        
+        <TabControl Grid.Row="2" Style="{StaticResource DarkTabControlStyle}">
+            <TabItem Header="Movies" Style="{StaticResource DarkTabItemStyle}">
+                <ListView ItemsSource="{Binding DisplayedMovies}" Style="{StaticResource DarkListViewStyle}" SelectedItem="{Binding SelectedMovie}">
+                    <ListView.ItemTemplate >
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Background="{StaticResource DarkBackgroundBrush}">
+                                <Image Source="{Binding ImagePath}" Width="auto" Height="150" Margin="5" Stretch="Uniform"/>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Stretch" Background="{StaticResource DarkBackgroundBrush}">
+                                    <TextBlock Text="{Binding NameInCurrentLanguage}" FontSize="18" FontWeight="Bold"
+                                               Style="{StaticResource DarkTextBlockStyle}" Margin="10 0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </TabItem>
+            
+            <TabItem Header="Series" Style="{StaticResource DarkTabItemStyle}">
+                <ListView ItemsSource="{Binding DisplayedSeries}" Style="{StaticResource DarkListViewStyle}" SelectedItem="{Binding SelectedSeries}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Background="{StaticResource DarkBackgroundBrush}">
+                                <Image Source="{Binding ImagePath}" Width="auto" Height="150" Margin="5" Stretch="Uniform"/>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center" Background="{StaticResource DarkBackgroundBrush}">
+                                    <TextBlock Text="{Binding NameInCurrentLanguage}" FontSize="18" FontWeight="Bold"
+                                               Style="{StaticResource DarkTextBlockStyle}" Margin="10 0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
