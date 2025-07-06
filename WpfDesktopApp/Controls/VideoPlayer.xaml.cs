@@ -249,10 +249,12 @@ public partial class VideoPlayer : UserControl
 
     private void CancelPlay(object sender, RoutedEventArgs e)
     {
+        var action = Globals.NavigateToMoviePageAction;
+        if (Globals.CurrentStreamItem is Series) action = Globals.NavigateToSeriesPageAction;
         Messenger.Publish(new Message
         {
-            Action = Globals.NavigateToMoviePageAction,
-            Data = Globals.CurrentMovie,
+            Action = action,
+            Data = Globals.CurrentStreamItem,
         });
     }
 }

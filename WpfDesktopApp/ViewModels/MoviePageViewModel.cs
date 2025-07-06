@@ -92,7 +92,7 @@ public class MoviePageViewModel : BaseViewModel
 
     private void PlayVideo(object? item)
     {
-        Globals.CurrentMovie = Movie;
+        Globals.CurrentStreamItem = Movie;
         if (item is Video video)
         {
             Messenger.Publish(new Message

@@ -4,7 +4,7 @@ namespace Core;
 
 public static class Globals
 {
-    public static Movie? CurrentMovie { get; set; } = null;
+    public static StreamItem? CurrentStreamItem { get; set; } = null;
     public static List<Movie> Movies = new List<Movie>();
     public static List<Series> Series = new List<Series>();
     public static Language CurrentLanguage { get; set; } = Language.English;

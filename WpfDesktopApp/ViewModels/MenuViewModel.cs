@@ -88,7 +88,7 @@ public class MenuViewModel : BaseViewModel, INotifyPropertyChanged
         if (series != null) Console.WriteLine($"Series '{series.Names[Globals.CurrentLanguage]}' selected");
         Messenger.Publish(new Message
         {
-            Action = Globals.NavigateToMoviePageAction,
+            Action = Globals.NavigateToSeriesPageAction,
             Data = series
         });
     }

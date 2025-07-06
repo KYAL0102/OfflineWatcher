@@ -87,7 +87,13 @@ namespace WpfDesktopApp.ViewModels
 
         private void NavigateToSeriesPage(object? item)
         {
-            
+            if (_window != null && _oldWindowState != null && _oldWindowStyle != null)
+            {
+                _window.ResizeMode = ResizeMode.CanResize;
+                _window.WindowState = (WindowState)_oldWindowState;
+                _window.WindowStyle = (WindowStyle)_oldWindowStyle;
+            }
+            if (item is Series series)  CurrentPage = new SeriesPage(_controller, series);
         }
         
     }
