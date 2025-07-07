@@ -210,33 +210,63 @@ public partial class VideoPlayer : UserControl
         }
     }
 
-    private DateTime _lastTimeUpdate = DateTime.MinValue;
-    private void VideoSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private bool _manualSliderChange = false;
+    private bool _manualSliderChanged = false;
+    private DateTime _lastSliderUpdate = DateTime.MinValue;
+
+    private async void VideoSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (_mediaPlayer is not { IsPlaying: true }) return;
-
-        // Debounce rapid changes
-        var now = DateTime.Now;
-        if ((now - _lastTimeUpdate).TotalMilliseconds < 200) return;
-        _lastTimeUpdate = now;
-
-        var newValue = (long)(_mediaPlayer.Length / (VideoSlider.Maximum - VideoSlider.Minimum) * VideoSlider.Value);
-        if (newValue >= 0 && newValue <= _mediaPlayer.Length)
+        if (!_manualSliderChange && _mediaPlayer != null && sender is Slider slider && slider.IsMouseCaptureWithin)
         {
-            _mediaPlayer.Time = newValue;
+            // Debounce rapid changes
+            var now = DateTime.Now;
+            if ((now - _lastSliderUpdate).TotalMilliseconds < 100) return;
+            _lastSliderUpdate = now;
+
+            _manualSliderChange = true;
+
+            try
+            {
+                var newValue = (long)(_mediaPlayer.Length / (VideoSlider.Maximum - VideoSlider.Minimum) * VideoSlider.Value);
+                if (newValue >= 0 && newValue <= _mediaPlayer.Length)
+                {
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        _mediaPlayer.Time = newValue;
+                    });
+                    _manualSliderChanged = true;
+                }
+            }
+            finally
+            {
+                _manualSliderChange = false;
+            }
         }
     }
 
     private bool _isUpdatingTimeLabel = false;
-    private void MediaPlayer_TimeChanged(object? sender, MediaPlayerTimeChangedEventArgs e)
+
+    private async void MediaPlayer_TimeChanged(object? sender, MediaPlayerTimeChangedEventArgs e)
     {
         if (_isUpdatingTimeLabel) return; // Prevent reentrant calls
 
         _isUpdatingTimeLabel = true;
+
         try
         {
-            Dispatcher.Invoke(() =>
+            await Dispatcher.InvokeAsync(() =>
             {
+                if (_mediaPlayer != null && !_manualSliderChange && !_manualSliderChanged)
+                {
+                    var newSliderValue = ((VideoSlider.Maximum - VideoSlider.Minimum) / _mediaPlayer.Length) * _mediaPlayer.Time;
+                    VideoSlider.Value = newSliderValue;
+                }
+
+                if (_manualSliderChanged)
+                {
+                    _manualSliderChanged = false;
+                }
+
                 TimeSpan timeSpan = TimeSpan.FromMilliseconds(e.Time);
                 TimeLabel.Content = timeSpan.ToString(@"hh\:mm\:ss");
             });
