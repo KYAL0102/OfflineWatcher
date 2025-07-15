@@ -1,0 +1,62 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:vm="using:AvaloniaDesktopApp.ViewModels"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:AvaloniaDesktopApp.Converters"
+             x:DataType="vm:MediaMenuViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaDesktopApp.Controls.MediaMenuControl">
+    <UserControl.Resources>
+        <converters:StringToBitmapConverter x:Key="StringToBitmapConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <TextBox Grid.Row="0" 
+                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                 Width="300" Margin="0,10" FontSize="14"/>
+        
+        <ProgressBar Grid.Row="1" 
+                     IsIndeterminate="True" Minimum="0" Maximum="100" 
+                     IsVisible="{Binding IsProgressbarVisible}"/><!--Visibility="{Binding ProgressBarVisibility}"-->
+
+        <TabControl Grid.Row="2">
+            <TabItem Header="Movies">
+                <ListBox ItemsSource="{Binding DisplayedMovies}" SelectedItem="{Binding SelectedMovie}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding ImagePath, Converter={StaticResource StringToBitmapConverter}}"
+                                       MaxHeight="150" Stretch="Uniform"/><!--Source="{Binding ImageSource}"-->
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{Binding NameInCurrentLanguage}" FontSize="18" FontWeight="Bold" Margin="10 0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+            </TabItem>
+            
+            <TabItem Header="Series">
+                <ListBox ItemsSource="{Binding DisplayedSeries}" SelectedItem="{Binding SelectedSeries}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding ImagePath, Converter={StaticResource StringToBitmapConverter}}" MaxHeight="150" Stretch="Uniform"/>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding NameInCurrentLanguage}" FontSize="18" FontWeight="Bold" Margin="10 0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

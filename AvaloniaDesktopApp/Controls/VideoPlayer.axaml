@@ -1,0 +1,72 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vlc="clr-namespace:LibVLCSharp.Avalonia;assembly=LibVLCSharp.Avalonia"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:converters="clr-namespace:AvaloniaDesktopApp.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaDesktopApp.Controls.VideoPlayer">
+    <UserControl.Resources>
+        <converters:AspectRatioConverter x:Key="AspectRatioConverter"/>
+    </UserControl.Resources>
+    <Grid x:Name="RootGrid">
+        <vlc:VideoView
+            x:Name="VideoView" HorizontalAlignment="Stretch"
+            Width="{Binding Width, ElementName=RootGrid}"
+            UseLayoutRounding="True">
+            <vlc:VideoView.Height>
+                <MultiBinding Converter="{StaticResource AspectRatioConverter}">
+                    <Binding Path="Width" ElementName="RootGrid"/>
+                    <Binding Source="1.78"/>
+                </MultiBinding>
+            </vlc:VideoView.Height>
+            <Grid Background="#02000000" 
+                  PointerExited="OnMouseLeave" PointerMoved="OnMouseMove" PointerPressed="UIElement_OnMouseDown">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Opacity="0" Grid.Row="0" x:Name="InnerUpperGrid" VerticalAlignment="Top" Margin="20 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Click="CancelPlay">
+                        <Image Source="../Assets/Images/close.png"/>
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="1" Opacity="0" x:Name="InnerGrid" VerticalAlignment="Bottom">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Slider x:Name="VideoSlider" 
+                            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="20 0"
+                            Minimum="0" Maximum="1000"
+                            ValueChanged="VideoSlider_OnValueChanged"/>
+                    
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20 10">
+                        <!-- Play/Pause button. -->
+                        <Button Click="ChangeVideoState">
+                            <Image Grid.Row="3" x:Name="VideoStateButtonImage"/>
+                        </Button>
+
+                        <!-- Volume slider. This slider allows a Volume range between 0 and 1. -->
+                        <TextBlock Foreground="White" VerticalAlignment="Center" Margin="5">Volume</TextBlock>
+                        <Slider VerticalAlignment="Center" Width="100"
+                                Minimum="0" Maximum="100" Value="100" ValueChanged="SoundSlider_OnValueChanged"/>
+                    </StackPanel>
+                    
+                    <Label x:Name="TimeLabel" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center"/>
+                </Grid>
+            </Grid>
+        </vlc:VideoView>
+    </Grid>
+</UserControl>

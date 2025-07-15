@@ -15,6 +15,7 @@ public static class VlcFinder
         // Check common installation directories
         string[] possiblePaths =
         {
+            Path.Combine(ImportController.RootDirectory, "vlc-3.0.21_windows", "vlc.exe"),
             @"C:\Program Files\VideoLAN\VLC\vlc.exe",
             @"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe"
         };
@@ -23,41 +24,10 @@ public static class VlcFinder
         {
             if (File.Exists(path))
             {
+                Console.WriteLine($"Found vlc.exe at '{path}'.");
                 return path;
             }
         }
-
-        // Check the Windows Registry
-        #if WINDOWS
-        using (Microsoft.Win32.RegistryKey? key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"))
-        {
-            if (key != null)
-            {
-                foreach (string subkeyName in key.GetSubKeyNames())
-                {
-                    using (Microsoft.Win32.RegistryKey? subkey = key.OpenSubKey(subkeyName))
-                    {
-                        if (subkey != null)
-                        {
-                            string? displayName = subkey.GetValue("DisplayName") as string;
-                            if (displayName != null && displayName.Contains("VLC media player"))
-                            {
-                                string? installLocation = subkey.GetValue("InstallLocation") as string;
-                                if (installLocation != null)
-                                {
-                                    string vlcExePath = Path.Combine(installLocation, "vlc.exe");
-                                    if (File.Exists(vlcExePath))
-                                    {
-                                        return vlcExePath;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    #endif
 
         return null;
     }
@@ -67,6 +37,7 @@ public static class VlcFinder
         // Check common installation directories on Linux
         string[] possiblePaths =
         {
+            Path.Combine(ImportController.RootDirectory, "vlc_linux", "vlc"),
             "/usr/bin/vlc",
             "/usr/local/bin/vlc",
             "/opt/vlc/vlc"

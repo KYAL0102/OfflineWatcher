@@ -1,26 +1,16 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using Core;
 using Core.Entities;
-using MVVMBase;
 
-namespace WpfDesktopApp.ViewModels;
+namespace AvaloniaDesktopApp.ViewModels;
 
-public class MenuViewModel : BaseViewModel, INotifyPropertyChanged
+public class MediaMenuViewModel : ViewModelBase
 {
-    private Visibility _progressBarVisibility = Visibility.Collapsed;
-
-    public Visibility ProgressBarVisibility
-    {
-        get => _progressBarVisibility;
-        set
-        {
-            _progressBarVisibility = value;
-            OnPropertyChanged();
-        }
-    }
-        
+    public bool IsProgressbarVisible { get; set; } = false;
     public Series? SelectedSeries
     {
         get => null;
@@ -50,19 +40,19 @@ public class MenuViewModel : BaseViewModel, INotifyPropertyChanged
             FilterDisplayData(_searchText);
         }
     }
-    
-    public MenuViewModel(WindowController? controller) : base(controller)
+    public MediaMenuViewModel()
     {
+        
     }
     
     public async Task InitializeDataAsync()
     {
         if (_series.Count == 0 || _movies.Count == 0)
         {
-            ProgressBarVisibility = Visibility.Visible;
+            IsProgressbarVisible = true;
             _series.AddRange(await ImportController.GetAllSeriesAsync());
             _movies.AddRange(await ImportController.GetAllMoviesAsync());
-            ProgressBarVisibility = Visibility.Collapsed;
+            IsProgressbarVisible = false;
         }
             
         //foreach (var s in _series) Console.WriteLine($"'{s.Names[Language.English]}' with {s.Genres.Count} genres and {s.Episodes.Count} episodes");
@@ -72,7 +62,7 @@ public class MenuViewModel : BaseViewModel, INotifyPropertyChanged
             
         await Task.CompletedTask;
     }
-        
+    
     private void OnMovieSelected(Movie? movie)
     { 
         if (movie != null) Console.WriteLine($"Movie '{movie.VideoOfMovie.Names[Globals.CurrentLanguage]}' selected");
@@ -135,7 +125,7 @@ public class MenuViewModel : BaseViewModel, INotifyPropertyChanged
         }
         else
         {
-            series = series.OrderBy(s => s.Names[Globals.CurrentLanguage]).ToList();
+            series = series.OrderBy(s => s.Names[Globals.CurrentLanguage]).ToList(); 
             movies = movies.OrderBy(m => m.VideoOfMovie.Names[Globals.CurrentLanguage]).ToList();
         }
             

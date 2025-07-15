@@ -1,18 +1,26 @@
 ﻿
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 using Core.Entities;
 
 namespace Core
 {
-    public class ImportController
+    public static class ImportController
     {
-        private static string RootDirectory
+        public static string RootDirectory
         {
             get
             {
                 var currentPath = Environment.CurrentDirectory;
-                if (OperatingSystem.IsWindows()) return "D:"; //Path.GetPathRoot(currentPath);
+                if (OperatingSystem.IsWindows())
+                {
+                    #if DEBUG
+                        return "D:";
+                    #elif RELEASE
+                        return Path.GetPathRoot(currentPath) ?? "D:";
+                    #endif
+                }
                 if (OperatingSystem.IsLinux())
                 {
                     var result = GetMountPoint(currentPath);
@@ -67,29 +75,36 @@ namespace Core
                             .Select(line => line.Split(";"))
                             .ToList();
 
-                        foreach (var detail in movieDetails)
+                        if (movieDetails.Select(d => d[3]).Count(d => d == "false") == 1)
                         {
-                            var video = new Video
+                            foreach (var detail in movieDetails)
                             {
-                                PathToVideoFile = Path.Combine(dir, $"{detail[0]}.mkv")
-                            };
-                            video.Names.Add(Language.English, detail[1]);
-                            video.Names.Add(Language.German, detail[2]);
-
-                            if (detail[3] == "false")
-                            {
-                                movie.VideoOfMovie = video;
-                                var genres = detail[4].Split(',').Select(genre => genre.Trim()).ToList();
-                                foreach (var genre in genres)
+                                var video = new Video
                                 {
-                                    Enum.TryParse(genre, out Genre enumGenre);
-                                    movie.Genres.Add(enumGenre);
-                                }
+                                    PathToVideoFile = Path.Combine(dir, $"{detail[0]}.mkv")
+                                };
+                                video.Names.Add(Language.English, detail[1]);
+                                video.Names.Add(Language.German, detail[2]);
 
-                                var imagePath = Path.Combine(ThumbnailDirectory, detail[5]);
-                                movie.ImagePath = imagePath;
+                                if (detail[3] == "false")
+                                {
+                                    movie.VideoOfMovie = video;
+                                    var genres = detail[4].Split(',').Select(genre => genre.Trim()).ToList();
+                                    foreach (var genre in genres)
+                                    {
+                                        Enum.TryParse(genre, out Genre enumGenre);
+                                        movie.Genres.Add(enumGenre);
+                                    }
+
+                                    var imagePath = Path.Combine(ThumbnailDirectory, detail[5]);
+                                    movie.ImagePath = imagePath;
+                                }
+                                else movie.Extras.Add(video);
                             }
-                            else movie.Extras.Add(video);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"info.csv file needs to have exactly 1 row entry where Extra is false. ({showInfoFilePath})");
                         }
                 
                         list.Add(movie);

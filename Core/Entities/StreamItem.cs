@@ -1,4 +1,7 @@
-﻿namespace Core.Entities;
+﻿using Avalonia.Media;
+using Avalonia.Media.Imaging;
+
+namespace Core.Entities;
 
 public class StreamItem
 {
