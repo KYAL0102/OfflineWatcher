@@ -64,7 +64,7 @@
                             </StackPanel>
                 
                             <Label Grid.Column="1" 
-                                   Content="{Binding CurrentName}"
+                                   Content="{Binding NameInCurrentLanguage}"
                                    VerticalAlignment="Center" Margin="10 0 0 0"/>
                         </Grid>
                     </DataTemplate>

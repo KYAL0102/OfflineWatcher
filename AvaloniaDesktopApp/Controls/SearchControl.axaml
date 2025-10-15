@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             xmlns:vm="using:AvaloniaDesktopApp.ViewModels"
+             x:DataType="vm:SearchViewModel"
+             x:Class="AvaloniaDesktopApp.Controls.SearchControl">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <TextBox Grid.Row="0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+             Width="300" Margin="0,10" FontSize="14" Watermark="Search for Movie or Series"/>
+
+    <ListBox Grid.Row="1" ItemsSource="{Binding DisplayedStreamItems}" SelectedItem="{Binding SelectedItem}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal">
+            <asyncImageLoader:AdvancedImage
+                Source="{Binding ImagePath, Mode=OneWay}"
+                MaxHeight="150" Stretch="Uniform"/>
+            <StackPanel>
+               <TextBlock Text="{Binding NameInCurrentLanguage}" FontSize="18" FontWeight="Bold" Margin="10 0"/>
+            </StackPanel>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </Grid>
+</UserControl>

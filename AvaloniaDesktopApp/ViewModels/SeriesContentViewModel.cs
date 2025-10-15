@@ -18,7 +18,7 @@ public class SeriesContentViewModel : ViewModelBase
         get => null;
         set => OnSeriesSelected(value);
     }
-    private readonly List<Series> _series = Globals.Series;
+    private readonly List<Series> _series = Globals.Series.ToList();
     private readonly List<SeriesRow> _allSeriesPerGenreRows = new();
     private int _currentBatchIndex = 0;
     private const int BatchSize = 5; // Load 5 rows at a time
@@ -40,6 +40,7 @@ public class SeriesContentViewModel : ViewModelBase
             //IsProgressbarVisible = true;
             var series = await ImportController.GetAllSeriesAsync();
             _series.AddRange(series);
+            Globals.Series.AddRange(series);
             //IsProgressbarVisible = false;
         }
 
@@ -89,7 +90,6 @@ public class SeriesContentViewModel : ViewModelBase
         {
             for (int i = startIndex; i < endIndex; i++)
             {
-                Console.WriteLine($"Adding {_allSeriesPerGenreRows[i].Header} ({i})");
                 SeriesRows.Add(_allSeriesPerGenreRows[i]);
             }
         });

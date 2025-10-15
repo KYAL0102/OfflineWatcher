@@ -15,18 +15,6 @@ namespace AvaloniaDesktopApp.ViewModels;
 public class MediaMenuViewModel : ViewModelBase
 {
     public bool IsProgressbarVisible { get; set; } = false;
-            
-    private string _searchText = string.Empty;
-
-    public string SearchText
-    {
-        get => _searchText;
-        set
-        {
-            _searchText = value;
-            //FilterDisplayData(_searchText);
-        }
-    }
 
     private string _currentHeader = string.Empty;
     public string CurrentHeader
@@ -50,6 +38,7 @@ public class MediaMenuViewModel : ViewModelBase
         }
     }
 
+    private SearchControl? _searchControl = null;
     private MovieContentControl? _movieContentControl = null;
     private SeriesContentControl? _seriesContentControl = null;
 
@@ -61,8 +50,8 @@ public class MediaMenuViewModel : ViewModelBase
     public MediaMenuViewModel()
     {
         ShowSearchCommand = new RelayCommand(
-            () => throw new NotImplementedException(),
-            () => false
+            () => ShowSearch(),
+            () => true
         );
         ShowMoviesCommand = new RelayCommand(
             () => ShowMovies(),
@@ -80,14 +69,20 @@ public class MediaMenuViewModel : ViewModelBase
         ShowMovies();
     }
 
+    private void ShowSearch()
+    {
+        CurrentHeader = "Search";
+
+        if (_searchControl == null) _searchControl = new();
+
+        CurrentControl = _searchControl;
+    }
+
     private void ShowMovies()
     {
         CurrentHeader = "Movies";
 
-        if (_movieContentControl == null)
-        {
-            _movieContentControl = new();
-        }
+        if (_movieContentControl == null) _movieContentControl = new();
 
         CurrentControl = _movieContentControl;
     }
@@ -96,10 +91,7 @@ public class MediaMenuViewModel : ViewModelBase
     {
         CurrentHeader = "Series";
 
-        if (_seriesContentControl == null)
-        {
-            _seriesContentControl = new();
-        }
+        if (_seriesContentControl == null) _seriesContentControl = new();
 
         CurrentControl = _seriesContentControl;
     }

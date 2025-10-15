@@ -23,7 +23,7 @@ public class MovieContentViewModel : ViewModelBase
         get => null;
         set => OnMovieSelected(value);
     }
-    private readonly List<Movie> _movies = Globals.Movies;
+    private readonly List<Movie> _movies = Globals.Movies.ToList();
     private readonly List<MovieRow> _allMovieRows = new();
     private int _currentBatchIndex = 0;
     private const int BatchSize = 5; // Load 5 rows at a time
@@ -46,6 +46,7 @@ public class MovieContentViewModel : ViewModelBase
             //IsProgressbarVisible = true;
             var movies = await ImportController.GetAllMoviesAsync();
             _movies.AddRange(movies);
+            Globals.Movies.AddRange(movies);
             //IsProgressbarVisible = false;
         }
 
@@ -105,7 +106,6 @@ public class MovieContentViewModel : ViewModelBase
         {
             for (int i = startIndex; i < endIndex; i++)
             {
-                Console.WriteLine($"Adding {_allMovieRows[i].Header} ({i})");
                 MovieRows.Add(_allMovieRows[i]);
             }
         });

@@ -2,8 +2,7 @@
 
 public class Series : StreamItem
 {
-    public string NameInCurrentLanguage => Names[Globals.CurrentLanguage];
-    public Dictionary<Language, string> Names { get; } = [];
     public List<Video> Episodes { get; } = [];
-    
+    public double IMDbRating { get; set; } = -1;
+    public int IMDbReviewAmout { get; set; } = -1;
 }
