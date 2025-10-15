@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AvaloniaDesktopApp.ViewModels;
 
-namespace AvaloniaDesktopApp.Views;
+namespace AvaloniaDesktopApp.Windows;
 
 public partial class MainWindow : Window
 {

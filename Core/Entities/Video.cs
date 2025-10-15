@@ -7,4 +7,6 @@ public class Video
     public string CurrentName => Names[Globals.CurrentLanguage];
 
     public string PathToVideoFile { get; set; } = string.Empty;
+
+    public int DurationInMinutes { get; set; } = -1;
 }

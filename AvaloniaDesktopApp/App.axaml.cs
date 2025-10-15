@@ -5,7 +5,7 @@ using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
 using AvaloniaDesktopApp.ViewModels;
-using AvaloniaDesktopApp.Views;
+using AvaloniaDesktopApp.Windows;
 
 namespace AvaloniaDesktopApp;
 

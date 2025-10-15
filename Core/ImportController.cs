@@ -86,19 +86,7 @@ namespace Core
                                 video.Names.Add(Language.English, detail[1]);
                                 video.Names.Add(Language.German, detail[2]);
 
-                                if (detail[3] == "false")
-                                {
-                                    movie.VideoOfMovie = video;
-                                    var genres = detail[4].Split(',').Select(genre => genre.Trim()).ToList();
-                                    foreach (var genre in genres)
-                                    {
-                                        Enum.TryParse(genre, out Genre enumGenre);
-                                        movie.Genres.Add(enumGenre);
-                                    }
-
-                                    var imagePath = Path.Combine(ThumbnailDirectory, detail[5]);
-                                    movie.ImagePath = imagePath;
-                                }
+                                if (detail[3] == "false") await ExtractMovieDataAsync(movie, detail, video);
                                 else movie.Extras.Add(video);
                             }
                         }
@@ -121,10 +109,45 @@ namespace Core
 
             stopwatch.Stop();
             Console.WriteLine($"Extracted {list.Count} movies in {stopwatch.ElapsedMilliseconds / 1000f}s!");
+            //GenreManager.Instance.PrintAllGenres();
 
             return list.ToList();
         }
-        
+
+        private async static Task ExtractMovieDataAsync(Movie movie, string[] detail, Video video)
+        {
+            movie.VideoOfMovie = video;
+
+            //Genres
+            var genres = await GenreManager.Instance.GetGenresFromStringAsync(detail[4]);
+            movie.Genres.AddRange(genres);
+
+            //Thumbnail-Path
+            var imagePath = Path.Combine(ThumbnailDirectory, detail[5]);
+            movie.ImagePath = imagePath;
+
+            //Movie-Duration
+            var success = int.TryParse(detail[6], out int durationInMinutes);
+            if (success) movie.VideoOfMovie.DurationInMinutes = durationInMinutes;
+            else Console.WriteLine($"Parsing of the Movie-Duration for {movie.NameInCurrentLanguage} not possible! -> input: {detail[6]}");
+
+            //Year of Release
+            success = int.TryParse(detail[7], out var yearOfRelease);
+            if (success) movie.YearOfRelease = yearOfRelease;
+            else Console.WriteLine($"Parsing of {nameof(movie.YearOfRelease)} for {movie.NameInCurrentLanguage} not possible! -> input: {detail[7]}");
+
+            //IMDb-Rating
+            success = double.TryParse(detail[8], out var rating);
+            if (success) movie.IMDbRating = rating;
+            else Console.WriteLine($"Parsing of {nameof(movie.IMDbRating)} for {movie.NameInCurrentLanguage} not possible! -> input: {detail[8]}");
+
+            //IMDb-Reviews
+            success = double.TryParse(detail[9], out var reviewAmount);
+            if (success) movie.IMDbRating = rating;
+            else Console.WriteLine($"Parsing of {nameof(movie.IMDbReviewAmout)} for {movie.NameInCurrentLanguage} not possible! -> input: {detail[9]}");
+
+        }
+
         public static async Task<List<Series>> GetAllSeriesAsync()
         {
             var stopwatch = new Stopwatch();
@@ -163,12 +186,9 @@ namespace Core
 
                         series.Names.Add(Language.English, namesOfShow[0]);
                         series.Names.Add(Language.German, namesOfShow[1]);
-                        var strGenres = namesOfShow[2].Split(',').Select(genre => genre.Trim()).ToList();;
-                        foreach (var strGenre in strGenres)
-                        {
-                            Enum.TryParse(strGenre, out Genre genre);
-                            series.Genres.Add(genre);
-                        }
+                        var genresTask = GenreManager.Instance.GetGenresFromStringAsync(namesOfShow[2]);
+                        var addTask = genresTask.ContinueWith(genres => series.Genres.AddRange(genres.Result)); 
+
                         series.ImagePath = Path.Combine(ThumbnailDirectory, namesOfShow[3]);
 
                         var groupInfos = Directory.GetFiles(dir, "*.csv", SearchOption.AllDirectories);
@@ -182,6 +202,7 @@ namespace Core
                             series.Episodes.AddRange(episodes);
                         }
 
+                        await addTask;
                         list.Add(series);
                     }
                     finally
