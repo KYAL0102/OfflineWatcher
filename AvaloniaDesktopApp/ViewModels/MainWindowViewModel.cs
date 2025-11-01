@@ -10,7 +10,8 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly Window? _window;
     private WindowState? _oldWindowState = null;
-    
+
+    private MediaMenuControl? _mediaMenuControl = null;
     private UserControl? _currentPage = null;
     public UserControl? CurrentPage
     {
@@ -45,7 +46,8 @@ public partial class MainWindowViewModel : ViewModelBase
             _window.CanResize = true;
             _window.WindowState = (WindowState)_oldWindowState;
         }
-        CurrentPage = new MediaMenuControl();
+        if (_mediaMenuControl == null) _mediaMenuControl = new();
+        CurrentPage = _mediaMenuControl;
     }
 
     private void NavigateToMoviePage(object? item)

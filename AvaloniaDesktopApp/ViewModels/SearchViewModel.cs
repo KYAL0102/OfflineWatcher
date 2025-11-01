@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core;
 using Core.Entities;
+using DynamicData;
 using ReactiveUI;
 
 namespace AvaloniaDesktopApp.ViewModels;
@@ -38,6 +39,7 @@ public class SearchViewModel : ViewModelBase
 
     public async Task InitializeDataAsync()
     {
+        _allStreamItems.Clear();
         if (Globals.Movies.Count == 0)
         {
             var movies = await ImportController.GetAllMoviesAsync();

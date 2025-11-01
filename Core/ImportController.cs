@@ -142,8 +142,8 @@ namespace Core
             else Console.WriteLine($"Parsing of {nameof(movie.IMDbRating)} for {movie.NameInCurrentLanguage} not possible! -> input: {detail[8]}");
 
             //IMDb-Reviews
-            success = double.TryParse(detail[9], out var reviewAmount);
-            if (success) movie.IMDbRating = rating;
+            success = int.TryParse(detail[9], out var reviewAmount);
+            if (success) movie.IMDbReviewAmout = reviewAmount;
             else Console.WriteLine($"Parsing of {nameof(movie.IMDbReviewAmout)} for {movie.NameInCurrentLanguage} not possible! -> input: {detail[9]}");
 
         }

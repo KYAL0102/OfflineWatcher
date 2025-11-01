@@ -40,6 +40,8 @@ public class SeriesContentViewModel : ViewModelBase
             //IsProgressbarVisible = true;
             var series = await ImportController.GetAllSeriesAsync();
             _series.AddRange(series);
+
+            Globals.Series.Clear();
             Globals.Series.AddRange(series);
             //IsProgressbarVisible = false;
         }

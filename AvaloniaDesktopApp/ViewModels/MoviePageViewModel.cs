@@ -8,6 +8,7 @@ using AvaloniaDesktopApp.Tools;
 using CommunityToolkit.Mvvm.Input;
 using Core;
 using Core.Entities;
+using DynamicData;
 using ReactiveUI;
 
 namespace AvaloniaDesktopApp.ViewModels;
@@ -24,6 +25,11 @@ public class MoviePageViewModel : ViewModelBase
 
             MovieName = _movie?.NameInCurrentLanguage;
             MovieFilePath = _movie?.VideoOfMovie.PathToVideoFile;
+            MovieReleaseYear = _movie?.YearOfRelease;
+            MovieIMDbRating = _movie?.IMDbRating;
+            MovieIMDbReviewAmount = _movie?.IMDbReviewAmout;
+            MovieGenres.Clear();
+            if (_movie != null) MovieGenres.AddRange(_movie.Genres);
         }
     }
 
@@ -33,7 +39,7 @@ public class MoviePageViewModel : ViewModelBase
         get => _movieName;
         set
         {
-            if (value == null) _movieName = string.Empty;
+            if (value == null) value = string.Empty;
             
             _movieName = value;
             OnPropertyChanged();
@@ -47,14 +53,54 @@ public class MoviePageViewModel : ViewModelBase
         get => _movieFilePath;
         set
         {
-            if (value == null) _movieFilePath = string.Empty;
-            
+            if (value == null) value = string.Empty;
+
             _movieFilePath = value;
             OnPropertyChanged();
         }
     }
 
-    public ObservableCollection<Video> Extras { get; set; } = [];
+    private int? _movieReleaseYear = -1;
+    public int? MovieReleaseYear
+    {
+        get => _movieReleaseYear;
+        set
+        {
+            if (value == null) return;
+
+            _movieReleaseYear = value;
+        }
+    }
+
+    private double? _movieIMDbRating = -1f;
+    public double? MovieIMDbRating
+    {
+        get => _movieIMDbRating;
+        set
+        {
+            if (value == null) value = -1;
+
+            _movieIMDbRating = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private int? _movieIMDbReviewAmount = -1;
+    public int? MovieIMDbReviewAmount
+    {
+        get => _movieIMDbReviewAmount;
+        set
+        {
+            if (value == null) value = -1;
+
+            _movieIMDbReviewAmount = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ObservableCollection<Genre> MovieGenres { get; } = [];
+
+    public ObservableCollection<Video> Extras { get; } = [];
 
     public RelayCommand BackToMenuCommand { get; set; }
     public RelayCommand PlayMovieWithVlcCommand { get; set; }

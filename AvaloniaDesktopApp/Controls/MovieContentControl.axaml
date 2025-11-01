@@ -36,7 +36,8 @@
                                 <DataTemplate>
                                     <asyncImageLoader:AdvancedImage
                                        Source="{Binding ImagePath, Mode=OneWay}"
-                                       MaxHeight="150" Stretch="Uniform"/>
+                                       MaxHeight="150" Stretch="Uniform"
+                                       RenderOptions.BitmapInterpolationMode="HighQuality"/>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>

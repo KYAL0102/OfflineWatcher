@@ -46,6 +46,8 @@ public class MovieContentViewModel : ViewModelBase
             //IsProgressbarVisible = true;
             var movies = await ImportController.GetAllMoviesAsync();
             _movies.AddRange(movies);
+
+            Globals.Movies.Clear();
             Globals.Movies.AddRange(movies);
             //IsProgressbarVisible = false;
         }

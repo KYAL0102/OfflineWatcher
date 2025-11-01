@@ -1,0 +1,38 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+    <Border Padding="20">
+      <!-- Add Controls for Previewer Here -->
+    </Border>
+  </Design.PreviewWith>
+
+  <!-- Add Styles Here -->
+  <Style Selector="Button.navBtn">
+    <Setter Property="Width" Value="60" />
+    <Setter Property="Height" Value="60" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Margin" Value="10 0"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+
+  <Style Selector="Button.navBtn > StackPanel > Border">
+    <Setter Property="Background" Value="White"/>
+    <Setter Property="Height" Value="35"/>
+    <Setter Property="Width" Value="35"/>
+  </Style>
+
+  <Style Selector="Button.navBtn > StackPanel > TextBlock">
+    <Setter Property="Opacity" Value="0"/>
+    <Setter Property="FontSize" Value="10"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.navBtn:pointerover">
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+
+  <Style Selector="Button.navBtn:pointerover > StackPanel > TextBlock">
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+</Styles>
