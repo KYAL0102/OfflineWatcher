@@ -9,7 +9,7 @@
     <UserControl.Styles>
         <StyleInclude Source="avares://AvaloniaDesktopApp/Resources/StreamItemPageStyles.axaml"/>
     </UserControl.Styles>
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -17,17 +17,28 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <UniformGrid Grid.Row="0" Margin="3 6">
                 <Button Content="Back"
                         Command="{Binding BackToMenuCommand}"/>
             </UniformGrid>
             
-            <Label Grid.Row="1" Content="{Binding MovieName}" Margin="20 0" FontSize="60"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" TextWrapping="Wrap"
+                       Text="{Binding MovieName}" Margin="20 0" FontSize="60"/>
 
             <StackPanel Classes="infoBar" Grid.Row="2">
                 <Label Content="{Binding MovieReleaseYear}"/>
+
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Image Source="" Height="20"/>
+                    <Label Content="{Binding MovieDuration}"/>
+                </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Image Source="../Assets/Images/IMDbLogo.png" Height="30"
@@ -41,7 +52,10 @@
                 </StackPanel>
             </StackPanel>
 
-            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="20 0 0 0" Spacing="10">
+            <TextBlock Classes="MovieDescription" Grid.Row="3" Grid.Column="0" Text="{Binding MovieDescription}" 
+                       Margin="20 0 20 20" TextWrapping="Wrap"/>
+
+            <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="20 0 0 0" Spacing="10">
                 <Button Classes="playBtn" Command="{Binding PlayMovieCommand}" IsEnabled="False">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="../Assets/Images/play_video.png"/>
@@ -56,8 +70,8 @@
                 </Button>
             </StackPanel>
             
-            <Label Grid.Row="4" Content="Extras" Margin="20 10 0 0"/><!--l t r b-->
-            <ListBox Grid.Row="5" ItemsSource="{Binding Extras}"
+            <Label Grid.Row="5" Content="Extras" Margin="20 10 0 0"/><!--l t r b-->
+            <ListBox Grid.Row="6" ItemsSource="{Binding Extras}"
                       ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

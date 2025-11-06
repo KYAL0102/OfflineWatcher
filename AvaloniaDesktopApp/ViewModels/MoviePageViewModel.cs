@@ -15,6 +15,15 @@ namespace AvaloniaDesktopApp.ViewModels;
 
 public class MoviePageViewModel : ViewModelBase
 {
+    private const string LOREM_IPSUM = "Lorem ipsum dolor sit amet consectetur adipiscing elit." +
+                                        "Quisque faucibus ex sapien vitae pellentesque sem placerat. " +
+                                        "In id cursus mi pretium tellus duis convallis. " +
+                                        "Tempus leo eu aenean sed diam urna tempor. " +
+                                        "Pulvinar vivamus fringilla lacus nec metus bibendum egestas. " +
+                                        "Iaculis massa nisl malesuada lacinia integer nunc posuere. " +
+                                        "Ut hendrerit semper vel class aptent taciti sociosqu. " +
+                                        "Ad litora torquent per conubia nostra inceptos himenaeos.";
+
     private Movie? _movie;
     private Movie? Movie
     {
@@ -26,8 +35,10 @@ public class MoviePageViewModel : ViewModelBase
             MovieName = _movie?.NameInCurrentLanguage;
             MovieFilePath = _movie?.VideoOfMovie.PathToVideoFile;
             MovieReleaseYear = _movie?.YearOfRelease;
+            MovieDuration = $"{_movie?.VideoOfMovie.DurationInMinutes}";
             MovieIMDbRating = _movie?.IMDbRating;
             MovieIMDbReviewAmount = _movie?.IMDbReviewAmout;
+            MovieDescription = _movie?.DescriptionInCurrentLanguage;//TODO
             MovieGenres.Clear();
             if (_movie != null) MovieGenres.AddRange(_movie.Genres);
         }
@@ -69,6 +80,19 @@ public class MoviePageViewModel : ViewModelBase
             if (value == null) return;
 
             _movieReleaseYear = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private string _movieDurationInMinutes = "0";
+    public string MovieDuration
+    {
+        get => $"{_movieDurationInMinutes} min";
+        set
+        {
+            if (value == null) value = "0";
+            _movieDurationInMinutes = value;
+            OnPropertyChanged();
         }
     }
 
@@ -98,6 +122,18 @@ public class MoviePageViewModel : ViewModelBase
         }
     }
 
+    private string? _movieDescription;
+    public string? MovieDescription
+    {
+        get => _movieDescription;
+        set
+        {
+            if (value == null) value = LOREM_IPSUM;
+            _movieDescription = value;
+            OnPropertyChanged();
+        }
+    }
+
     public ObservableCollection<Genre> MovieGenres { get; } = [];
 
     public ObservableCollection<Video> Extras { get; } = [];
@@ -107,8 +143,10 @@ public class MoviePageViewModel : ViewModelBase
     public RelayCommand PlayMovieCommand { get; set; }
     public ReactiveCommand<object?, Unit> PlayVideoCommand { get; set; }
     public ReactiveCommand<object?, Unit> PlayVideoWithVlcCommand { get; set; }
+    private bool _clickedPlay { get; set; }
     public MoviePageViewModel(Movie? movie)
     {
+        _clickedPlay = false;
         Movie = movie;
         Movie?.Extras.ForEach(e => Extras.Add(e));
         BackToMenuCommand = new RelayCommand(
@@ -135,16 +173,17 @@ public class MoviePageViewModel : ViewModelBase
     
     private void PlayMovie()
     {
-        if (Movie != null) PlayVideo(Movie.VideoOfMovie);
+        if (Movie != null && !_clickedPlay) PlayVideo(Movie.VideoOfMovie);
     }
 
     private void PlayMovieWithVlc()
     {
-        if (MovieFilePath != null) PlayVideoWithVlc(MovieFilePath);
+        if (MovieFilePath != null && !_clickedPlay) PlayVideoWithVlc(MovieFilePath);
     }
 
     private void PlayVideo(object? item)
     {
+        _clickedPlay = true;
         Globals.CurrentStreamItem = Movie;
         if (item is Video video)
         {
@@ -159,6 +198,7 @@ public class MoviePageViewModel : ViewModelBase
     private void PlayVideoWithVlc(object? filePath)
     {
         if (filePath is not string path) return;
+        _clickedPlay = true;
 
         var vlcPath = VlcFinder.FindVlcInstallation();
         if (vlcPath == null)

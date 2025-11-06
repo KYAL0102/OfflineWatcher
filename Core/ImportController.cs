@@ -146,6 +146,8 @@ namespace Core
             if (success) movie.IMDbReviewAmout = reviewAmount;
             else Console.WriteLine($"Parsing of {nameof(movie.IMDbReviewAmout)} for {movie.NameInCurrentLanguage} not possible! -> input: {detail[9]}");
 
+            movie.Descriptions.Add(Language.English, detail[10]);
+            movie.Descriptions.Add(Language.German, detail[11]);
         }
 
         public static async Task<List<Series>> GetAllSeriesAsync()
