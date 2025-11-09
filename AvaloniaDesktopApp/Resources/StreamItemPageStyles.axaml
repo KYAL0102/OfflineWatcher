@@ -7,9 +7,24 @@
   </Design.PreviewWith>
 
   <!-- Add Styles Here -->
+  <Style Selector="Grid.BaseGrid > StackPanel">
+    <Setter Property="Margin" Value="20 0 20 20"/>
+  </Style>
+
+  <Style Selector="Grid.BaseGrid > Label">
+    <Setter Property="Margin" Value="20 0 20 20"/>
+  </Style>
+
+  <Style Selector="Grid.BaseGrid > TextBlock">
+    <Setter Property="Margin" Value="20 0 20 20"/>
+  </Style>
+
+  <Style Selector="Grid.BaseGrid > ScrollViewer">
+    <Setter Property="Margin" Value="20 0 20 20"/>
+  </Style>
+
   <Style Selector="StackPanel.infoBar">
     <Setter Property="Orientation" Value="Horizontal"/>
-    <Setter Property="Margin" Value="20 0 20 20"/>
     <Setter Property="Spacing" Value="20"/>
   </Style>
 
@@ -29,6 +44,21 @@
 
   <Style Selector="TextBlock.MovieDescription">
     <Setter Property="FontSize" Value="16"/>
+  </Style>
+
+  <Style Selector="Border.GenreItem">
+    <Setter Property="Background" Value="#30FFFFFF"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="Padding" Value="5"/>
+  </Style>
+
+  <Style Selector="Border.GenreItem:pointerover">
+    <Setter Property="Background" Value="#20FFFFFF"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+
+  <Style Selector="Border.GenreItem > TextBlock">
+    <Setter Property="FontSize" Value="12"/>
   </Style>
 
   <Style Selector="Button.playBtn">

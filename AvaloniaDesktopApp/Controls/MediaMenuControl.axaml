@@ -37,7 +37,7 @@
                     <TextBlock Text="Search"/>
                 </StackPanel>
             </Button>
-            <Button Classes="navBtn" Command="{Binding ShowMoviesCommand}">
+            <Button Classes="navBtn" Command="{Binding ShowMoviesCommand}" >
                 <StackPanel Orientation="Vertical">
                     <Border>
                         <Border.OpacityMask>

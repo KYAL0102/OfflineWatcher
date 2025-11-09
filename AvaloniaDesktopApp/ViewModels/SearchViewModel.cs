@@ -13,7 +13,7 @@ namespace AvaloniaDesktopApp.ViewModels;
 
 public class SearchViewModel : ViewModelBase
 {
-    private const double SimilarityThreshold = 90;
+    private const double SimilarityThreshold = 65;
     private string _searchText = string.Empty;
     public string SearchText
     {
