@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <UniformGrid Grid.Row="0" Margin="3 6">
+            <UniformGrid Grid.Row="0" Margin="20 10">
                 <Button Content="Back"
                         Command="{Binding BackToMenuCommand}"/>
             </UniformGrid>

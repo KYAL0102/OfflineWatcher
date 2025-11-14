@@ -10,6 +10,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using CommunityToolkit.Mvvm.Input;
 using Core;
 using Core.Entities;
 using DynamicData;
@@ -18,11 +19,6 @@ namespace AvaloniaDesktopApp.ViewModels;
 
 public class MovieContentViewModel : ViewModelBase
 {
-    public Movie? SelectedMovie
-    {
-        get => null;
-        set => OnMovieSelected(value);
-    }
     private readonly List<Movie> _movies = Globals.Movies.ToList();
     private readonly List<MovieRow> _allMovieRows = new();
     private int _currentBatchIndex = 0;
@@ -36,8 +32,12 @@ public class MovieContentViewModel : ViewModelBase
         public List<Movie> DisplayedMovies { get; set; } = [];
     }
     public ObservableCollection<MovieRow> MovieRows { get; set; } = [];
+    public RelayCommand<Movie> OnMovieClickCommand { get; private set; }
 
-    public MovieContentViewModel() { }
+    public MovieContentViewModel()
+    {
+        OnMovieClickCommand = new(OnMovieSelected);
+    }
 
     public async Task InitializeDataAsync()
     {

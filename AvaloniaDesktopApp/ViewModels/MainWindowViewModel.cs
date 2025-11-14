@@ -11,7 +11,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly Window? _window;
     private WindowState? _oldWindowState = null;
 
-    private MediaMenuControl? _mediaMenuControl = null;
+    private MediaMenuControl? _mediaMenuControl = new();
     private UserControl? _currentPage = null;
     public UserControl? CurrentPage
     {
@@ -26,7 +26,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(Window? window = null)
     {
         _window = window;
-        CurrentPage = new MediaMenuControl();
+        CurrentPage = _mediaMenuControl;
         
         Messenger.Subscribe(Globals.NavigateToMenuAction, _ => NavigateToMenu());
         Messenger.Subscribe(Globals.NavigateToMoviePageAction, message => NavigateToMoviePage(message.Data));

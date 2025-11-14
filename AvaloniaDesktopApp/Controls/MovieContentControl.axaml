@@ -3,6 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
              xmlns:converters="clr-namespace:AvaloniaDesktopApp.Converters"
              xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              xmlns:vm="using:AvaloniaDesktopApp.ViewModels"
@@ -11,6 +13,9 @@
     <UserControl.Resources>
         <converters:StringToBitmapConverter x:Key="StringToBitmapConverter"/>
     </UserControl.Resources>
+    <UserControl.Styles>
+        <StyleInclude Source="avares://AvaloniaDesktopApp/Resources/MoviesControlStyles.axaml"/>
+    </UserControl.Styles>
   
     <ScrollViewer VerticalScrollBarVisibility="Auto" ScrollChanged="ScrollViewer_ScrollChanged">
         <ItemsControl x:Name="baseItemsControl" ItemsSource="{Binding MovieRows}">
@@ -23,24 +28,27 @@
                 <DataTemplate>
                     <StackPanel>
                         <TextBlock Text="{Binding Header}" FontWeight="Bold" Margin="5"/>
-                        <ListBox ItemsSource="{Binding DisplayedMovies}"
-                                 SelectedItem="{Binding #baseItemsControl.DataContext.SelectedMovie, Mode=TwoWay}"
-                                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                                 ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <asyncImageLoader:AdvancedImage
-                                       Source="{Binding ImagePath, Mode=OneWay}"
-                                       MaxHeight="150" Stretch="Uniform"
-                                       RenderOptions.BitmapInterpolationMode="HighQuality"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+                            <ItemsControl ItemsSource="{Binding DisplayedMovies}"> <!--SelectedItem="{Binding #baseItemsControl.DataContext.SelectedMovie, Mode=TwoWay}"-->
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Classes="MovieBtnBorder">
+                                            <Button Classes="MovieBtn" Command="{Binding #baseItemsControl.DataContext.OnMovieClickCommand}" CommandParameter="{Binding}">
+                                                <asyncImageLoader:AdvancedImage
+                                                    Source="{Binding ImagePath, Mode=OneWay}"
+                                                    MaxHeight="150" Stretch="Uniform" CornerRadius="5"
+                                                    RenderOptions.BitmapInterpolationMode="HighQuality"/>
+                                            </Button>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

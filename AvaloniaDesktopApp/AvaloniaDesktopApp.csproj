@@ -13,6 +13,7 @@
     <AvaloniaResource Include="Resources\**" />
   </ItemGroup>
   <ItemGroup>
+    <AvaloniaXaml Remove="Resources\MoviesControlStyles.axaml" />
     <AvaloniaXaml Remove="Resources\NavigationBarStyles.axaml" />
     <AvaloniaXaml Remove="Resources\StreamItemPageStyles.axaml" />
   </ItemGroup>
