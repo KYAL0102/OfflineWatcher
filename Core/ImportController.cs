@@ -12,7 +12,7 @@ namespace Core
         {
             get
             {
-                var currentPath = Environment.CurrentDirectory;
+                var currentPath = AppContext.BaseDirectory;
                 if (OperatingSystem.IsWindows())
                 {
                     #if DEBUG
@@ -23,8 +23,14 @@ namespace Core
                 }
                 if (OperatingSystem.IsLinux())
                 {
+                    var diskName = GetCurrentDiskName(currentPath) ?? "Seagate_5TB";
+
+                    #if DEBUG
+                    return Path.Combine("/run/media", Environment.UserName, "Seagate_5TB");
+                    #elif RELEASE
                     var result = GetMountPoint(currentPath);
-                    if (result != null) return result;
+                    if (result != null) return Path.Combine(result, diskName);
+                    #endif
                 }
 
                 return "";
@@ -43,6 +49,7 @@ namespace Core
             var semaphore = new SemaphoreSlim(25, 25);
             var list = new ConcurrentBag<Movie>();
             
+            Console.WriteLine($"RootDirectory: {RootDirectory}");
             if (!Directory.Exists(MovieDirectory))
             {
                 Console.WriteLine($"Directory {MovieDirectory} does not exist.");
@@ -248,6 +255,52 @@ namespace Core
             return episodes;
         }
         
+        private static string? GetCurrentDiskName(string path)
+        {
+            if (!OperatingSystem.IsLinux()) return null;
+
+            var targetPath = path;
+            if (string.IsNullOrWhiteSpace(targetPath))
+            {
+                targetPath = AppContext.BaseDirectory;
+            }
+
+            var sourceDevice = RunProcess("findmnt", $"-no SOURCE --target \"{targetPath}\"");
+            if (!string.IsNullOrWhiteSpace(sourceDevice))
+            {
+                var label = RunProcess("lsblk", $"-no LABEL \"{sourceDevice}\"");
+                if (!string.IsNullOrWhiteSpace(label))
+                {
+                    return label.Trim();
+                }
+
+                return Path.GetFileName(sourceDevice.Trim());
+            }
+
+            var mountPoint = GetMountPoint(targetPath);
+            if (string.IsNullOrWhiteSpace(mountPoint)) return null;
+
+            var trimmedMountPoint = mountPoint.TrimEnd('/');
+            return trimmedMountPoint.Length > 1 ? Path.GetFileName(trimmedMountPoint) : null;
+        }
+
+        private static string? RunProcess(string fileName, string arguments)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using var process = Process.Start(startInfo);
+            if (process == null) return null;
+
+            return process.StandardOutput.ReadToEnd().Trim();
+        }
+
         public static string? GetMountPoint(string path)
         {
             // Use the 'df' command to get the mount point
@@ -269,12 +322,28 @@ namespace Core
                     string[] lines = result.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                     if (lines.Length > 1)
                     {
-                        return lines[1].Trim();
+                        var mountPoint = lines[1].Trim();
+                        if (mountPoint == "/mnt/External")
+                        {
+                            var hDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                            if (!string.IsNullOrWhiteSpace(hDirectory))
+                            {
+                                return Path.Combine(hDirectory, "media").Replace("\\", "/") + "/";
+                            }
+                        }
+
+                        return mountPoint;
                     }
                 }
-            } 
+            }
 
-            return "/";
+            var homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (!string.IsNullOrWhiteSpace(homeDirectory))
+            {
+                return Path.Combine(homeDirectory, "media").Replace("\\", "/") + "/";
+            }
+
+            return "/run/media/";
         }
     }
 }

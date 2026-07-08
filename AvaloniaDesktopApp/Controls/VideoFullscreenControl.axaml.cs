@@ -9,10 +9,21 @@ namespace AvaloniaDesktopApp.Controls;
 
 public partial class VideoFullscreenControl : UserControl
 {
-    public VideoFullscreenViewModel _viewModel;
+    private VideoFullscreenViewModel? _viewModel;
+
+    public VideoFullscreenControl()
+        : this(null)
+    {
+    }
+
     public VideoFullscreenControl(Video? video)
     {
         InitializeComponent();
+        InitializeViewModel(video);
+    }
+
+    private void InitializeViewModel(Video? video)
+    {
         _viewModel = new VideoFullscreenViewModel(video);
         DataContext = _viewModel;
         Loaded += OnLoaded;
@@ -20,6 +31,9 @@ public partial class VideoFullscreenControl : UserControl
 
     private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        await _viewModel.InitializeDataAsync();
+        if (_viewModel is not null)
+        {
+            await _viewModel.InitializeDataAsync();
+        }
     }
 }

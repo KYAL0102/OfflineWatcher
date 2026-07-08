@@ -38,6 +38,9 @@ public static class VlcFinder
         string[] possiblePaths =
         {
             Path.Combine(ImportController.RootDirectory, "vlc_linux", "vlc"),
+            Path.Combine(ImportController.RootDirectory, "vlc-3.0.23_linux", "vlc"),
+            Path.Combine(ImportController.RootDirectory, "vlc-3.0.23_linux", "vlc.appimage"),
+            "/run/media/" + Environment.UserName + "/" + (ImportController.RootDirectory.Split('/').LastOrDefault() ?? string.Empty) + "/vlc-3.0.23_linux/vlc",
             "/usr/bin/vlc",
             "/usr/local/bin/vlc",
             "/opt/vlc/vlc"
@@ -47,6 +50,7 @@ public static class VlcFinder
         {
             if (File.Exists(path))
             {
+                Console.WriteLine($"Found vlc at '{path}'.");
                 return path;
             }
         }
